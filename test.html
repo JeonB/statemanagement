@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vanilla JS 상태 관리</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      h1 {
+        font-size: 3rem;
+      }
+      button {
+        font-size: 1.5rem;
+        margin: 10px;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="counter">0</h1>
+    <button id="increment">+</button>
+    <button id="decrement">-</button>
+
+    <script>
+      // 🟢 상태 관리 객체
+      //   const state = {
+      //     count: 0,
+      //   };
+
+      //   // 🟡 상태 업데이트 함수
+      //   function setState(newState) {
+      //     Object.assign(state, newState); // 기존 상태를 새로운 값으로 업데이트
+      //     render(); // UI 업데이트
+      //   }
+
+      //   // 🔵 UI 업데이트 함수
+      //   function render() {
+      //     document.getElementById("counter").innerText = state.count;
+      //   }
+
+      //   // 🟠 이벤트 리스너 등록
+      //   document.getElementById("increment").addEventListener("click", () => {
+      //     setState({ count: state.count + 1 });
+      //   });
+
+      //   document.getElementById("decrement").addEventListener("click", () => {
+      //     setState({ count: state.count - 1 });
+      //   });
+
+      //   render(); // 초기 렌더링
+
+      class State {
+        constructor() {
+          this.state = {
+            count: 0,
+          };
+          this.counterElement = document.getElementById("counter");
+          this.incrementElement = document.getElementById("increment");
+          this.decrementElement = document.getElementById("decrement");
+
+          this.incrementElement.addEventListener(
+            "click",
+            this.increment.bind(this)
+          );
+          this.decrementElement.addEventListener(
+            "click",
+            this.decrement.bind(this)
+          );
+        }
+
+        setState(newState) {
+          this.state = { ...this.state, ...newState };
+          this.render();
+        }
+        increment() {
+          this.setState({ count: this.state.count + 1 });
+        }
+        decrement() {
+          this.setState({ count: this.state.count - 1 });
+        }
+
+        render() {
+          document.getElementById("counter").innerText = this.state.count;
+        }
+      }
+      new State();
+    </script>
+  </body>
+</html>

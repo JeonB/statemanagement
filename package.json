@@ -1,0 +1,17 @@
+{
+  "name": "statemanagement",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jeonb",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "rimraf": "^6.0.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
+}
