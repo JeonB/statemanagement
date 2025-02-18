@@ -20,10 +20,19 @@
     </style>
   </head>
   <body>
-    <h1 id="counter">0</h1>
-    <button id="increment">+</button>
-    <button id="decrement">-</button>
-
+    <div
+      style="
+        width: 10rem;
+        height: 10rem;
+        background-color: violet;
+        justify-self: center;
+        align-items: center;
+      "
+    >
+      <button class="tap">할일1</button><button class="tap">할일2</button
+      ><button class="tap">할일3</button>
+      <div id="list"></div>
+    </div>
     <script>
       // 🟢 상태 관리 객체
       //   const state = {
