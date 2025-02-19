@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vanilla JS 상태 관리</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      h1 {
+        font-size: 3rem;
+      }
+      button {
+        font-size: 1.5rem;
+        margin: 10px;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        width: 20rem;
+        height: 20rem;
+        background-color: violet;
+        justify-self: center;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+      "
+    >
+      <button id="increment">증가</button>
+      <button id="decrement">감소</button>
+      <div id="counter"></div>
+    </div>
+    <script>
+      const listeners = new Set();
+      const subscribe = (listener) => {
+        listeners.add(listener);
+        console.log(`리스너 등록됨: ${listeners.size}`);
+
+        return () => {
+          listeners.delete(listener);
+          console.log(`리스너 제거됨: ${listeners.size}`);
+        };
+      };
+
+      // 특정 조건에서 이전에 등록된 리스너를 삭제하고 싶을 때 사용
+      //useEffect에서 클린업 함수를 반환하는 것과 비슷한 역할
+      const unsubscribe = subscribe(() => console.log("상태 변경 감지됨"));
+
+      unsubscribe();
+
+      function useState(initialValue) {
+        let state = initialValue;
+        const listeners = new Set(); // 상태가 변경될 때 실행될 함수들 저장
+
+        const setState = (newState) => {
+          if (state !== newState) {
+            state = newState;
+            listeners.forEach((listener) => listener(state)); // 연결된 UI 업데이트
+          }
+        };
+
+        const subscribe = (listener) => {
+          listeners.add(listener);
+          return () => listeners.delete(listener); // 구독 취소 기능
+        };
+
+        return [() => state, setState, subscribe];
+      }
+
+      const [getCount, setCount, subscribeCount] = useState(0);
+
+      const render = () => {
+        document.getElementById("counter").innerText = getCount();
+      };
+
+      subscribeCount(render);
+
+      document.getElementById("increment").addEventListener("click", () => {
+        setCount(getCount() + 1);
+      });
+
+      document.getElementById("decrement").addEventListener("click", () => {
+        setCount(getCount() - 1);
+      });
+
+      render();
+    </script>
+  </body>
+</html>
