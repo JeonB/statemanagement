@@ -17,24 +17,28 @@
         margin: 10px;
         padding: 10px 20px;
       }
+      .active {
+        background-color: lightblue;
+      }
     </style>
   </head>
   <body>
-    <div
-      style="
-        width: 10rem;
-        height: 10rem;
-        background-color: violet;
-        justify-self: center;
-        align-items: center;
-      "
-    >
-      <button class="tap">할일1</button><button class="tap">할일2</button
-      ><button class="tap">할일3</button>
+    <div style="display: flex; flex-direction: column; align-items: center">
+      <div
+        style="
+          justify-self: center;
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+        "
+      >
+        <button class="tap">할일1</button><button class="tap">할일2</button
+        ><button class="tap">할일3</button>
+      </div>
       <div id="list"></div>
     </div>
     <script>
-      const list = [
+      const todolist = [
         {
           id: 1,
           title: "할일1",
@@ -55,27 +59,73 @@
       class TodoList {
         constructor() {
           this.state = {
-            currentTap: "할일1",
-            list: [],
+            currentTab: "할일1",
+            list: todolist,
           };
 
-          this.setState = (newState) => {
-            this.state = newState;
-            tapbar.setState(this.state.currentTap);
-            content.setState(this.state.list);
-          };
+          this.tabBar = new TabBar({
+            onClick: (name) => {
+              if (this.state.currentTab !== name) {
+                this.setState({ currentTab: name });
+              }
+            },
+          });
 
-          this.render = () => {
-            const tapbar = new TapBar(this.state.currentTap);
-            const content = new Content(this.state.list);
-          };
+          this.content = new Content();
+
+          this.render();
         }
 
+        setState = (newState) => {
+          this.state = { ...this.state, ...newState };
+          this.render();
+        };
         render() {
-          const tapbar = new TapBar(this.state.currentTap);
-          const content = new Content(this.state.list);
+          this.tabBar.setState(this.state.currentTab);
+          const selectedTap = this.state.list.find(
+            (todo) => todo.title === this.state.currentTab
+          );
+          this.content.setState(selectedTap);
         }
       }
+
+      class TabBar {
+        constructor({ onClick }) {
+          this.tapElements = document.querySelectorAll(".tap");
+          this.tapElements.forEach((tapElement) => {
+            tapElement.addEventListener("click", () => {
+              onClick(tapElement.innerText);
+            });
+          });
+        }
+
+        setState(currentTab) {
+          this.tapElements.forEach((tapElement) => {
+            if (tapElement.innerText === currentTab) {
+              tapElement.classList.add("active");
+            } else {
+              tapElement.classList.remove("active");
+            }
+          });
+        }
+      }
+
+      class Content {
+        constructor() {
+          this.titleElement = document.getElementById("list");
+        }
+        setState(item) {
+          if (!item) {
+            this.titleElement.innerText = "선택된 항목 없음"; // ✅ 예외 처리
+          } else {
+            this.titleElement.innerText = `${item.title} - ${
+              item.done ? "완료" : "진행 중"
+            }`;
+          }
+        }
+      }
+
+      new TodoList();
     </script>
   </body>
 </html>
